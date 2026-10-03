@@ -49,48 +49,36 @@
 </div>
 
 <script>
-    // Твоя личная, проверенная в космосе ссылка!
     const API_URL = "https://google.com";
-    
     let dbData = [];
     let bookingData = { date: "", time: "", name: "", phone: "", price: 500 }; 
 
-    async function loadSlots() {
-        try {
-            let response = await fetch(API_URL);
-            let htmlText = await response.text(); 
-            
-            // ХУЯК! Намертво вырезаем массив данных из любого HTML-кода Google!
-            let startIdx = htmlText.indexOf("[");
-            let endIdx = htmlText.lastIndexOf("]") + 1;
-            
-            if (startIdx === -1 || endIdx === 0) {
-                document.getElementById("loading").innerText = "Немає вільних днів для запису ❌";
-                return;
-            }
-            
-            let cleanJson = htmlText.substring(startIdx, endIdx);
-            dbData = JSON.parse(cleanJson);
-            
-            document.getElementById("loading").style.display = "none";
-            let container = document.getElementById("date-container");
-            
-            if(dbData.length === 0) {
-                container.innerHTML = "<p style='text-align:center;'>Немає вільних днів для запису ❌</p>";
-                return;
-            }
-            
-            dbData.forEach((day, index) => {
-                let btn = document.createElement("button");
-                btn.className = "btn";
-                btn.style.background = "#d47a86";
-                btn.innerText = "📅 " + day.displayDate;
-                btn.onclick = () => selectDate(index);
-                container.appendChild(btn);
-            });
-        } catch (e) {
-            document.getElementById("loading").innerText = "Помилка зв'язку з Excel ❌";
+    // ХУЯК! Наша секретна глобальна функція, яку викликає сам сервер Google!
+    window.handleGoogleData = function(data) {
+        dbData = data;
+        document.getElementById("loading").style.display = "none";
+        let container = document.getElementById("date-container");
+        
+        if(dbData.length === 0) {
+            container.innerHTML = "<p style='text-align:center;'>Немає вільних днів для запису ❌</p>";
+            return;
         }
+        
+        dbData.forEach((day, index) => {
+            let btn = document.createElement("button");
+            btn.className = "btn";
+            btn.style.background = "#d47a86";
+            btn.innerText = "📅 " + day.displayDate;
+            btn.onclick = () => selectDate(index);
+            container.appendChild(btn);
+        });
+    }
+
+    function loadSlotsJSONP() {
+        // Пробиваємо CORS через динамічний тег скрипта! Обхід будь-якого захисту!
+        let script = document.createElement("script");
+        script.src = API_URL + "?callback=handleGoogleData";
+        document.body.appendChild(script);
     }
 
     function selectDate(index) {
@@ -139,17 +127,16 @@
         try {
             await fetch(API_URL, {
                 method: "POST",
-                mode: "no-cors", // Жестко блокируем CORS на отправку, чтобы Google хавал запись без ошибок!
+                mode: "no-cors", 
                 body: JSON.stringify(bookingData)
             });
-            
             document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         } catch(e) {
             document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         }
     }
 
-    loadSlots();
+    loadSlotsJSONP();
 </script>
 </body>
 </html>
