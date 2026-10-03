@@ -25,7 +25,7 @@
 <div class="card">
     <h2>🍬 Zukerka Онлайн Запис</h2>
     
-    <!-- КРОК 1: Завантаження / Вибір Дати -->
+    <!-- КРОК 1: Вибір Дати -->
     <div id="step1" class="step active">
         <div id="loading" class="loading">Шукаємо вільні вікна в Excel...</div>
         <div id="date-container"></div>
@@ -49,7 +49,7 @@
 </div>
 
 <script>
-    // Твоя проверенная серверная ссылка зажата в бетон!
+    // Твоя перевірена робоча адреса сервера вже на базі в бетоне!
     const API_URL = "https://google.com";
     
     let dbData = [];
@@ -58,7 +58,20 @@
     async function loadSlots() {
         try {
             let response = await fetch(API_URL);
-            dbData = await response.json();
+            let htmlText = await response.text();
+            
+            // Викушуємо чистий JSON з HTML-сторінки сервісу Google
+            let startIdx = htmlText.indexOf("[");
+            let endIdx = htmlText.lastIndexOf("]") + 1;
+            
+            if (startIdx === -1 || endIdx === 0) {
+                document.getElementById("loading").innerText = "Немає вільних днів для запису ❌";
+                return;
+            }
+            
+            let cleanJson = htmlText.substring(startIdx, endIdx);
+            dbData = JSON.parse(cleanJson);
+            
             document.getElementById("loading").style.display = "none";
             let container = document.getElementById("date-container");
             
@@ -126,12 +139,10 @@
         try {
             let response = await fetch(API_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bookingData)
             });
             
-            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успешно записана!<br><span style='font-size:14px;color:#555;'>Мастер ждет тебя! Спасибо! 💕</span></h3>";
+            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         } catch(e) {
             alert("Помилка відправки запису ❌");
         }
