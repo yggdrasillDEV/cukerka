@@ -49,7 +49,7 @@
 </div>
 
 <script>
-    // Твоя перевірена робоча адреса сервера вже на базі в бетоне!
+    // Твоє перевірене робоче посилання сервера зафіксоване в бетон!
     const API_URL = "https://google.com";
     
     let dbData = [];
@@ -58,9 +58,9 @@
     async function loadSlots() {
         try {
             let response = await fetch(API_URL);
-            let htmlText = await response.text();
+            let htmlText = await response.text(); // Зчитуємо відповідь як чистий текст сторінки
             
-            // Викушуємо чистий JSON з HTML-сторінки сервісу Google
+            // ХУЯК! Викушуємо чистий JSON масиву з усього HTML-коду Google!
             let startIdx = htmlText.indexOf("[");
             let endIdx = htmlText.lastIndexOf("]") + 1;
             
