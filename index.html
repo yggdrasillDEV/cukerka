@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zukerka Beauty - Онлайн Запис</title>
+    <style>
+        :root { --main: #ffb6c1; --bg: #fff5f5; --text: #4a3b32; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 400px; width: 100%; box-sizing: border-box; }
+        h2 { text-align: center; color: #d47a86; margin-top: 0; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .btn { background: var(--main); color: white; border: none; padding: 12px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .btn:hover { background: #e5a2ad; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .slot-btn { border: 2px solid var(--main); background: white; color: var(--text); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; }
+        .slot-btn.selected { background: var(--main); color: white; }
+        input { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid #ebd5d8; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        .loading { text-align: center; font-weight: bold; color: #a1888b; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🍬 Zukerka Онлайн Запис</h2>
+    
+    <!-- КРОК 1: Завантаження / Вибір Дати -->
+    <div id="step1" class="step active">
+        <div id="loading" class="loading">Шукаємо вільні вікна в Excel...</div>
+        <div id="date-container"></div>
+    </div>
+
+    <!-- КРОК 2: Вибір Часу -->
+    <div id="step2" class="step">
+        <p style="text-align:center; font-weight:bold;">Обери час на <span id="selected-date-txt"></span>:</p>
+        <div id="slots-grid" class="grid"></div>
+        <button class="btn" onclick="prevStep(1)">⬅️ Назад</button>
+    </div>
+
+    <!-- КРОК 3: Введення Даних Клієнтки -->
+    <div id="step3" class="step">
+        <p style="text-align:center; font-weight:bold;">Фінал! Введи свої дані:</p>
+        <input type="text" id="client-name" placeholder="Твоє ім'я" required>
+        <input type="tel" id="client-phone" placeholder="Номер телефону" required>
+        <button class="btn" onclick="submitBooking()">🎉 Підтвердити Запис</button>
+        <button class="btn" style="background:#ccc;" onclick="prevStep(2)">⬅️ Назад</button>
+    </div>
+</div>
+
+<script>
+    // Твоя проверенная серверная ссылка зажата в бетон!
+    const API_URL = "https://google.com";
+    
+    let dbData = [];
+    let bookingData = { date: "", time: "", name: "", phone: "", price: 500 }; 
+
+    async function loadSlots() {
+        try {
+            let response = await fetch(API_URL);
+            dbData = await response.json();
+            document.getElementById("loading").style.display = "none";
+            let container = document.getElementById("date-container");
+            
+            if(dbData.length === 0) {
+                container.innerHTML = "<p style='text-align:center;'>Немає вільних днів для запису ❌</p>";
+                return;
+            }
+            
+            dbData.forEach((day, index) => {
+                let btn = document.createElement("button");
+                btn.className = "btn";
+                btn.style.background = "#d47a86";
+                btn.innerText = "📅 " + day.displayDate;
+                btn.onclick = () => selectDate(index);
+                container.appendChild(btn);
+            });
+        } catch (e) {
+            document.getElementById("loading").innerText = "Помилка зв'язку з Excel ❌";
+        }
+    }
+
+    function selectDate(index) {
+        let day = dbData[index];
+        bookingData.date = day.date;
+        document.getElementById("selected-date-txt").innerText = day.displayDate;
+        
+        let grid = document.getElementById("slots-grid");
+        grid.innerHTML = "";
+        
+        day.slots.forEach(slot => {
+            let div = document.createElement("div");
+            div.className = "slot-btn";
+            div.innerText = slot;
+            div.onclick = () => {
+                document.querySelectorAll(".slot-btn").forEach(el => el.classList.remove("selected"));
+                div.classList.add("selected");
+                bookingData.time = slot;
+                setTimeout(() => nextStep(3), 300);
+            };
+            grid.appendChild(div);
+        });
+        nextStep(2);
+    }
+
+    function nextStep(stepNum) {
+        document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+        document.getElementById("step" + stepNum).classList.add("active");
+    }
+
+    function prevStep(stepNum) {
+        nextStep(stepNum);
+    }
+
+    async function submitBooking() {
+        bookingData.name = document.getElementById("client-name").value;
+        bookingData.phone = document.getElementById("client-phone").value;
+        
+        if(!bookingData.name || !bookingData.phone) {
+            alert("Введи ім'я та телефон, красуне! 💕");
+            return;
+        }
+        
+        document.getElementById("step3").innerHTML = "<div class='loading'>Записуємо в базу... Зачекайте...</div>";
+        
+        try {
+            let response = await fetch(API_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bookingData)
+            });
+            
+            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успешно записана!<br><span style='font-size:14px;color:#555;'>Мастер ждет тебя! Спасибо! 💕</span></h3>";
+        } catch(e) {
+            alert("Помилка відправки запису ❌");
+        }
+    }
+
+    loadSlots();
+</script>
+</body>
+</html>
