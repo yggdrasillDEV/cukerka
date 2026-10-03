@@ -5,19 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zukerka Beauty - Онлайн Запис</title>
     <style>
-        :root { --main: #ffb6c1; --bg: #fff5f5; --text: #4a3b32; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 400px; width: 100%; box-sizing: border-box; }
-        h2 { text-align: center; color: #d47a86; margin-top: 0; }
+        :root { 
+            --main-glow: #ffffff; 
+            --text-light: #f5f5f7; 
+            --bg-glass: rgba(25, 25, 25, 0.75); 
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            /* ХУЯК! Вшиваем сочный эстетичный коллаж прямо на задний фон! */
+            background: url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-light); 
+            padding: 20px; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+            justify-content: center;
+        }
+        /* Эффект дорогого матового стекла для карточки */
+        .card { 
+            background: var(--bg-glass); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+            max-width: 400px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h2 { 
+            text-align: center; 
+            color: #ffffff; 
+            margin-top: 0; 
+            font-weight: 300; 
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 20px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
         .step { display: none; }
         .step.active { display: block; }
-        .btn { background: var(--main); color: white; border: none; padding: 12px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn:hover { background: #e5a2ad; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .slot-btn { border: 2px solid var(--main); background: white; color: var(--text); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; }
-        .slot-btn.selected { background: var(--main); color: white; }
-        input { width: 100%; padding: 12px; margin-top: 10px; border: 2px solid #ebd5d8; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        .loading { text-align: center; font-weight: bold; color: #a1888b; }
+        
+        /* Ультимативные белые кнопки с эффектом неонового свечения! */
+        .btn { 
+            background: none;
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            padding: 14px; 
+            width: 100%; 
+            border-radius: 14px; 
+            font-size: 15px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            transition: all 0.3s ease; 
+            box-sizing: border-box;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:hover { 
+            background: white;
+            color: #111111;
+            box-shadow: 0 0 20px rgba(255,255,255,0.6);
+            border-color: white;
+        }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        
+        /* Кнопки времени внутри сетки */
+        .slot-btn { 
+            border: 1px solid rgba(255,255,255,0.3); 
+            background: rgba(0, 0, 0, 0.4); 
+            color: var(--text-light); 
+            padding: 12px; 
+            border-radius: 12px; 
+            text-align: center; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.2s ease;
+        }
+        .slot-btn:hover {
+            border-color: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.4);
+        }
+        .slot-btn.selected { 
+            background: white; 
+            color: #111111; 
+            border-color: white;
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 12px; 
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            color: white;
+            transition: 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .loading { text-align: center; font-weight: 300; color: #ccc; letter-spacing: 1px; }
+        p { font-size: 14px; color: #ccc; }
     </style>
 </head>
 <body>
@@ -33,27 +131,26 @@
 
     <!-- КРОК 2: Вибір Часу -->
     <div id="step2" class="step">
-        <p style="text-align:center; font-weight:bold;">Обери час на <span id="selected-date-txt"></span>:</p>
+        <p style="text-align:center; font-weight:400;">Обери час на <span id="selected-date-txt" style="color:white;font-weight:600;"></span>:</p>
         <div id="slots-grid" class="grid"></div>
-        <button class="btn" onclick="prevStep(1)">⬅️ Назад</button>
+        <button class="btn" onclick="prevStep(1)" style="margin-top:20px; background:rgba(0,0,0,0.3);">⬅️ Назад</button>
     </div>
 
     <!-- КРОК 3: Введення Даних Клієнтки -->
     <div id="step3" class="step">
-        <p style="text-align:center; font-weight:bold;">Фінал! Введи свої дані:</p>
+        <p style="text-align:center; font-weight:400;">Фінал! Введи свої дані:</p>
         <input type="text" id="client-name" placeholder="Твоє ім'я" required>
         <input type="tel" id="client-phone" placeholder="Номер телефону" required>
         <button class="btn" onclick="submitBooking()">🎉 Підтвердити Запис</button>
-        <button class="btn" style="background:#ccc;" onclick="prevStep(2)">⬅️ Назад</button>
+        <button class="btn" style="background:rgba(0,0,0,0.3);" onclick="prevStep(2)">⬅️ Назад</button>
     </div>
 </div>
 
 <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbx0IUUj56CEjqxUW0vMFJcwU874vKOF_WwimUHiT00J7LHVzOtmcTn_tM4_3T2aWp51iw/exec";
+    const API_URL = "https://google.com";
     let dbData = [];
     let bookingData = { date: "", time: "", name: "", phone: "", price: 500 }; 
 
-    // ХУЯК! Наша секретна глобальна функція, яку викликає сам сервер Google!
     window.handleGoogleData = function(data) {
         dbData = data;
         document.getElementById("loading").style.display = "none";
@@ -67,7 +164,6 @@
         dbData.forEach((day, index) => {
             let btn = document.createElement("button");
             btn.className = "btn";
-            btn.style.background = "#d47a86";
             btn.innerText = "📅 " + day.displayDate;
             btn.onclick = () => selectDate(index);
             container.appendChild(btn);
@@ -75,7 +171,6 @@
     }
 
     function loadSlotsJSONP() {
-        // Пробиваємо CORS через динамічний тег скрипта! Обхід будь-якого захисту!
         let script = document.createElement("script");
         script.src = API_URL + "?callback=handleGoogleData";
         document.body.appendChild(script);
@@ -130,9 +225,9 @@
                 mode: "no-cors", 
                 body: JSON.stringify(bookingData)
             });
-            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
+            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         } catch(e) {
-            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
+            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         }
     }
 
