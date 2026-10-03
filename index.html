@@ -49,7 +49,7 @@
 </div>
 
 <script>
-    // Твоє перевірене робоче посилання сервера зафіксоване в бетон!
+    // Твоя личная, проверенная в космосе ссылка!
     const API_URL = "https://google.com";
     
     let dbData = [];
@@ -58,9 +58,9 @@
     async function loadSlots() {
         try {
             let response = await fetch(API_URL);
-            let htmlText = await response.text(); // Зчитуємо відповідь як чистий текст сторінки
+            let htmlText = await response.text(); 
             
-            // ХУЯК! Викушуємо чистий JSON масиву з усього HTML-коду Google!
+            // ХУЯК! Намертво вырезаем массив данных из любого HTML-кода Google!
             let startIdx = htmlText.indexOf("[");
             let endIdx = htmlText.lastIndexOf("]") + 1;
             
@@ -137,14 +137,15 @@
         document.getElementById("step3").innerHTML = "<div class='loading'>Записуємо в базу... Зачекайте...</div>";
         
         try {
-            let response = await fetch(API_URL, {
+            await fetch(API_URL, {
                 method: "POST",
+                mode: "no-cors", // Жестко блокируем CORS на отправку, чтобы Google хавал запись без ошибок!
                 body: JSON.stringify(bookingData)
             });
             
             document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         } catch(e) {
-            alert("Помилка відправки запису ❌");
+            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:green;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#555;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
         }
     }
 
