@@ -8,13 +8,19 @@
         :root { 
             --main-glow: #ffffff; 
             --text-light: #f5f5f7; 
-            --bg-glass: rgba(20, 20, 20, 0.85); 
+            --bg-glass: rgba(15, 15, 15, 0.88); 
         }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            /* Наш соковитий локальний б'юті-колаж на тлі */
+            /* Наш локальний б'юті-колаж на тлі */
             background: #1a1a1a url('bg.jpeg') no-repeat center center fixed;
             background-size: cover;
+            
+            /* ХУЯК! ЯДЕРНИЙ ХАКЕРСЬКИЙ ФІКС РОЗШИРЕННЯ КАРТИНКИ ДЛЯ ПК! */
+            image-rendering: -webkit-optimize-contrast; /* Максимальна чіткість у Chrome/Safari */
+            image-rendering: crisp-edges;               /* Випалюємо мило на моніторах */
+            image-rendering: pixelated;                 /* Тримаємо пропорції пікселів */
+            
             color: var(--text-light); 
             padding: 20px; 
             margin: 0; 
@@ -29,51 +35,48 @@
             content: "";
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(10, 10, 10, 0.6); /* Темний люксовий фільтр-вуаль */
+            background: rgba(0, 0, 0, 0.35); /* М'яка люксова вуаль */
             z-index: -1;
         }
-        /* ХУЯК! Промисловий фікс для ПК! На комп'ютері картка стає більшою та чіткішою! */
         .card { 
             background: var(--bg-glass); 
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            padding: 40px; 
-            border-radius: 28px; 
-            box-shadow: 0 30px 70px rgba(0,0,0,0.7); 
-            max-width: 460px; /* Сеньйор-розмір під монітори ПК */
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 45px; 
+            border-radius: 32px; 
+            box-shadow: 0 40px 90px rgba(0,0,0,0.85); 
+            max-width: 520px; 
             width: 100%; 
             box-sizing: border-box; 
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
             z-index: 1;
             transition: all 0.3s ease;
         }
-        /* Мікро-ефект збільшення для краси */
         @media (min-width: 768px) {
-            .card { transform: scale(1.05); } 
+            .card { transform: scale(1.02); } 
         }
         h2 { 
             text-align: center; 
             color: #ffffff; 
             margin-top: 0; 
             font-weight: 300; 
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            font-size: 20px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-            margin-bottom: 25px;
+            font-size: 22px;
+            text-shadow: 0 0 15px rgba(255,255,255,0.5);
+            margin-bottom: 30px;
         }
         .step { display: none; }
         .step.active { display: block; }
         
-        /* Світящіся білі неонові кнопки */
         .btn { 
             background: none;
             color: white; 
-            border: 1px solid rgba(255,255,255,0.35); 
-            padding: 16px; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            padding: 18px; 
             width: 100%; 
-            border-radius: 14px; 
-            font-size: 15px; 
+            border-radius: 16px; 
+            font-size: 16px; 
             font-weight: 500; 
             cursor: pointer; 
             margin-top: 15px; 
@@ -85,53 +88,53 @@
         .btn:hover { 
             background: white;
             color: #111111;
-            box-shadow: 0 0 25px rgba(255,255,255,0.8);
+            box-shadow: 0 0 30px rgba(255,255,255,0.9);
             border-color: white;
         }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 25px; }
         
         .slot-btn { 
-            border: 1px solid rgba(255,255,255,0.2); 
-            background: rgba(0, 0, 0, 0.5); 
+            border: 1px solid rgba(255,255,255,0.25); 
+            background: rgba(0, 0, 0, 0.6); 
             color: var(--text-light); 
-            padding: 14px; 
-            border-radius: 12px; 
+            padding: 16px; 
+            border-radius: 14px; 
             text-align: center; 
             cursor: pointer; 
             font-weight: 600; 
             transition: all 0.2s ease;
             letter-spacing: 1px;
-            font-size: 16px;
+            font-size: 18px;
         }
         .slot-btn:hover {
             border-color: white;
-            box-shadow: 0 0 12px rgba(255,255,255,0.4);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
         }
         .slot-btn.selected { 
             background: white; 
             color: #111111; 
             border-color: white;
-            box-shadow: 0 0 20px rgba(255,255,255,0.9);
+            box-shadow: 0 0 25px rgba(255,255,255,1);
         }
         input { 
             width: 100%; 
-            padding: 16px; 
-            margin-top: 12px; 
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.15); 
-            border-radius: 12px; 
+            padding: 18px; 
+            margin-top: 15px; 
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 14px; 
             box-sizing: border-box; 
-            font-size: 16px; 
+            font-size: 17px; 
             color: white;
             transition: 0.3s;
         }
         input:focus {
             outline: none;
             border-color: white;
-            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+            box-shadow: 0 0 12px rgba(255,255,255,0.4);
         }
-        .loading { text-align: center; font-weight: 300; color: #aaa; letter-spacing: 1px; font-size: 15px; }
-        p { font-size: 15px; color: #bbb; letter-spacing: 0.5px; }
+        .loading { text-align: center; font-weight: 300; color: #aaa; letter-spacing: 1px; font-size: 16px; }
+        p { font-size: 16px; color: #bbb; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
@@ -149,7 +152,7 @@
     <div id="step2" class="step">
         <p style="text-align:center; font-weight:400;">Обери час на <span id="selected-date-txt" style="color:white;font-weight:600;"></span>:</p>
         <div id="slots-grid" class="grid"></div>
-        <button class="btn" onclick="prevStep(1)" style="margin-top:25px; background:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.15);">⬅️ Назад</button>
+        <button class="btn" onclick="prevStep(1)" style="margin-top:25px; background:rgba(0,0,0,0.5); border-color:rgba(255,255,255,0.2);">⬅️ Назад</button>
     </div>
 
     <!-- КРОК 3: Введення Даних Клієнтки -->
@@ -158,22 +161,21 @@
         <input type="text" id="client-name" placeholder="Твоє ім'я" required>
         <input type="tel" id="client-phone" placeholder="Номер телефону" required>
         <button class="btn" onclick="submitBooking()">🎉 Підтвердити Запис</button>
-        <button class="btn" style="background:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.15);" onclick="prevStep(2)">⬅️ Назад</button>
+        <button class="btn" style="background:rgba(0,0,0,0.5); border-color:rgba(255,255,255,0.2);" onclick="prevStep(2)">⬅️ Назад</button>
     </div>
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx0IUUj56CEjqxUW0vMFJcwU874vKOF_WwimUHiT00J7LHVzOtmcTn_tM4_3T2aWp51iw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx0IUUj56CEjqxUW0vMFJcwU874vKOF_WwimUHiT00J7LHVzOtmcTn_tM4_3T2aWp51iw/exec"; 
     let dbData = [];
     let bookingData = { date: "", time: "", name: "", phone: "", price: 500 }; 
 
     window.handleGoogleData = function(data) {
-        // ХУЯК! Ловимо і страхуємо помилки парсингу масиву від Google!
         try {
             dbData = data;
             document.getElementById("loading").style.display = "none";
             let container = document.getElementById("date-container");
-            container.innerHTML = ""; // Чистимо старий текст перед рендером
+            container.innerHTML = ""; 
             
             if(!dbData || dbData.length === 0) {
                 container.innerHTML = "<p style='text-align:center;'>Немає вільних днів для запису ❌</p>";
