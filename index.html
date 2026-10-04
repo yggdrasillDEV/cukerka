@@ -136,7 +136,15 @@
         .loading { text-align: center; font-weight: 300; color: #aaa; letter-spacing: 1px; font-size: 16px; }
         p { font-size: 16px; color: #bbb; letter-spacing: 0.5px; }
     </style>
-     <script src="https://telegram.org"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    // Сообщаем Telegram, что приложение полностью загрузилось и готово к работе
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand(); // ХУЯК! Разворачиваем приложение на весь экран для люкс UX!
+    }
+</script>
+
 </head>
 <body>
 
@@ -244,15 +252,13 @@
         
         document.getElementById("step3").innerHTML = "<div class='loading'>Записуємо в базу... Зачекайте...</div>";
         
-                // Витягуємо прихований ID чату клієнтки прямо з кишок вікна Телеграм
+                        // Витягуємо прихований ID чату клієнтки прямо з кишок вікна Телеграм
         let tgUserId = "";
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready(); // Будимо Web App інтерфейс!
-            if (window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-                tgUserId = String(window.Telegram.WebApp.initDataUnsafe.user.id);
-            }
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            tgUserId = String(window.Telegram.WebApp.initDataUnsafe.user.id);
         }
         
+        // Пакуємо повний набір даних разом із ID чату клієнтки
         const payloadData = {
             date: bookingData.date,
             time: bookingData.time,
@@ -261,6 +267,7 @@
             price: 500,
             tg_user_id: tgUserId
         };
+
 
         
         // ХУЯК! ВТОРОЙ АВТОНОМНЫЙ КАБЕЛЬ — ШЛЮЗ КЛИЕНТСКИХ ЧЕКОВ И НАПОМИНАЛОК ЗА 1 ЧАС v2.0
