@@ -227,7 +227,7 @@
         nextStep(stepNum);
     }
 
-     async function submitBooking() {
+    async function submitBooking() {
         bookingData.name = document.getElementById("client-name").value;
         bookingData.phone = document.getElementById("client-phone").value;
         
@@ -244,13 +244,19 @@
                 mode: "no-cors", 
                 body: JSON.stringify(bookingData)
             });
-            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
+            
+            // ХУЯК! Додаємо соковитий люксовий текст РАЗОМ із кнопкою повернення на головний екран!
+            document.getElementById("step3").innerHTML = `
+                <h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);margin-bottom:20px;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>
+                <button class="btn" onclick="window.location.reload();" style="background:rgba(255,255,255,0.15); border-color:rgba(255,255,255,0.3);">⬅️ Повернутись на головну</button>
+            `;
         } catch(e) {
-            document.getElementById("step3").innerHTML = "<h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>";
+            document.getElementById("step3").innerHTML = `
+                <h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);margin-bottom:20px;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>
+                <button class="btn" onclick="window.location.reload();" style="background:rgba(255,255,255,0.15); border-color:rgba(255,255,255,0.3);">⬅️ Повернутись на головну</button>
+            `;
         }
     }
-
-    loadSlotsJSONP();
 </script>
 </body>
 </html>
