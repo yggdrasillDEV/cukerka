@@ -243,14 +243,41 @@
         
         document.getElementById("step3").innerHTML = "<div class='loading'>Записуємо в базу... Зачекайте...</div>";
         
+        // ХУЯК! Витягуємо прихований ID чату клієнтки прямо з кишок вікна Телеграм!
+        let tgUserId = "";
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            tgUserId = window.Telegram.WebApp.initDataUnsafe.user.id;
+        }
+        
+        // Пакуємо повний набір даних разом із ID чату клієнтки
+        const payloadData = {
+            date: bookingData.date,
+            time: bookingData.time,
+            name: bookingData.name,
+            phone: bookingData.phone,
+            price: 500,
+            tg_user_id: tgUserId
+        };
+        
+        // ХУЯК! ВТОРОЙ АВТОНОМНЫЙ КАБЕЛЬ — ШЛЮЗ КЛИЕНТСКИХ ЧЕКОВ И НАПОМИНАЛОК ЗА 1 ЧАС v2.0
+        // Вставляй сюди свою довгу ссилку /exec від ТРЕТЬОГО клієнтського скрипта чеків!
+        const CLIENT_API_URL = "https://script.google.com/macros/s/AKfycbwuSofr4szRynnKss8t48YjyyeawRfelymdyk7Kp_H2sLW9mwiTvHKZNLIoD0x850zOnw/exec";
+        
         try {
+            // 1. Сигнал на перший кабель (Адмін-Мост для каси й Каті)
             await fetch(API_URL, {
                 method: "POST",
                 mode: "no-cors", 
-                body: JSON.stringify(bookingData)
+                body: JSON.stringify(payloadData)
             });
             
-            // ХУЯК! Додаємо соковитий люксовий текст РАЗОМ із кнопкою повернення на головний екран!
+            // 2. Сигнал на другий кабель (Клієнтський шлюз для чека та будильника за 1 годину)
+            await fetch(CLIENT_API_URL, {
+                method: "POST",
+                mode: "no-cors", 
+                body: JSON.stringify(payloadData)
+            });
+            
             document.getElementById("step3").innerHTML = `
                 <h3 style='text-align:center;color:#fff;text-shadow: 0 0 10px rgba(255,255,255,0.5);margin-bottom:20px;'>🎉 Ти успішно записана!<br><span style='font-size:14px;color:#ccc;'>Майстер чекає на тебе! Дякуємо! 💕</span></h3>
                 <button class="btn" onclick="window.location.reload();" style="background:rgba(255,255,255,0.15); border-color:rgba(255,255,255,0.3);">⬅️ Повернутись на головну</button>
@@ -262,7 +289,8 @@
             `;
         }
     }
-        loadSlotsJSONP();
+    loadSlotsJSONP();
+
 </script>
 </body>
 </html>
