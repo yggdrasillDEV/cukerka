@@ -33,20 +33,29 @@
             background: rgba(0, 0, 0, 0.35); /* М'яка люксова вуаль */
             z-index: -1;
         }
+                /* ХУЯК! Картка стає повністю еластичною, адаптивною і м'яко стискається на будь-якому телефоні! */
         .card { 
             background: var(--bg-glass); 
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            padding: 45px; 
+            padding: 5vw; /* Динамічні відступи: самі зменшуються на малих екранах! */
             border-radius: 32px; 
             box-shadow: 0 40px 90px rgba(0,0,0,0.85); 
             max-width: 520px; 
-            width: 100%; 
+            width: 90%; /* Жорстко лочимо гумову ширину, щоб картка ніколи не вилазила за краї! */
             box-sizing: border-box; 
             border: 1px solid rgba(255,255,255,0.12);
             z-index: 1;
             transition: all 0.3s ease;
         }
+        /* Обмеження для великих ПК-моніторів, щоб на комп'ютері відступи не розпирало */
+        @media (min-width: 768px) {
+            .card { 
+                padding: 45px; 
+                transform: scale(1.02); 
+            } 
+        }
+
         @media (min-width: 768px) {
             .card { transform: scale(1.02); } 
         }
