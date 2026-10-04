@@ -10,16 +10,11 @@
             --text-light: #f5f5f7; 
             --bg-glass: rgba(15, 15, 15, 0.88); 
         }
-        body { 
+             body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            /* Наш локальний б'юті-колаж на тлі */
-            background: #1a1a1a url('bg.jpeg') no-repeat center center fixed;
-            background-size: cover;
-            
-            /* ХУЯК! ЯДЕРНИЙ ХАКЕРСЬКИЙ ФІКС РОЗШИРЕННЯ КАРТИНКИ ДЛЯ ПК! */
-            image-rendering: -webkit-optimize-contrast; /* Максимальна чіткість у Chrome/Safari */
-            image-rendering: crisp-edges;               /* Випалюємо мило на моніторах */
-            image-rendering: pixelated;                 /* Тримаємо пропорції пікселів */
+            /* ХУЯК! Жестко лочим картинку в оригинальном размере по центру, запрещая растягивание на ПК! */
+            background: #1e1e1e url('bg.jpeg') no-repeat center center fixed;
+            background-size: contain; /* Картинка сжимается и держит 100% свою четкость и пропорции! */
             
             color: var(--text-light); 
             padding: 20px; 
